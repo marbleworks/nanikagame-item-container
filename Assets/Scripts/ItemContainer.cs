@@ -159,15 +159,80 @@ namespace NanikaGame
             Changed?.Invoke();
             return true;
         }
-
         /// <summary>
         /// Checks whether the given index is within the valid range of slots.
         /// </summary>
         /// <param name="index">The index to validate.</param>
         /// <returns>True if index is between 0 and Capacity - 1; otherwise false.</returns>
-        private bool IsIndexValid(int index)
+        public bool IsIndexValid(int index)
         {
             return index >= 0 && index < Capacity;
+        }
+
+        /// <summary>
+        /// Moves the item from <paramref name="fromIndex"/> to <paramref name="toIndex"/>
+        /// inside this container or another container. If the destination slot
+        /// already has an item, the items are swapped.
+        /// </summary>
+        /// <param name="destination">Destination container.</param>
+        /// <param name="fromIndex">Index of the item to move in the source container.</param>
+        /// <param name="toIndex">Index of the slot in the destination container.</param>
+        /// <returns>True if the move succeeded; otherwise false.</returns>
+        public bool MoveItem(ItemContainer destination, int fromIndex, int toIndex)
+        {
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
+
+            if (!IsIndexValid(fromIndex) || !destination.IsIndexValid(toIndex))
+                return false;
+
+            var item = Items[fromIndex];
+            if (item == null)
+                return false;
+
+            var destItem = destination.Items[toIndex];
+
+            Items[fromIndex] = destItem;
+            destination.Items[toIndex] = item;
+
+            Changed?.Invoke();
+            if (destination != this)
+                destination.Changed?.Invoke();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Moves the item from <paramref name="fromIndex"/> to the first empty
+        /// slot in <paramref name="destination"/>.
+        /// </summary>
+        /// <param name="destination">Destination container.</param>
+        /// <param name="fromIndex">Index of the item to move.</param>
+        /// <returns>True if the move succeeded; otherwise false.</returns>
+        public bool MoveToFirstEmptySlot(ItemContainer destination, int fromIndex)
+        {
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
+
+            if (!IsIndexValid(fromIndex))
+                return false;
+
+            var item = Items[fromIndex];
+            if (item == null)
+                return false;
+
+            var emptyIndex = Array.IndexOf(destination.Items, null);
+            if (emptyIndex == -1)
+                return false;
+
+            Items[fromIndex] = null;
+            destination.Items[emptyIndex] = item;
+
+            Changed?.Invoke();
+            if (destination != this)
+                destination.Changed?.Invoke();
+
+            return true;
         }
     }
 }
