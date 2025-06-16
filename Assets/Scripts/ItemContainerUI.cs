@@ -17,6 +17,24 @@ namespace NanikaGame
 
         private void Awake()
         {
+            if (Container != null)
+                Setup(Container);
+        }
+
+        /// <summary>
+        /// Configures this UI with the given <see cref="ItemContainer"/>.
+        /// Existing slot children will be destroyed and recreated.
+        /// </summary>
+        /// <param name="container">Container to display.</param>
+        public void Setup(ItemContainer container)
+        {
+            Container = container;
+
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
+
             if (Container == null || SlotPrefab == null)
                 return;
 
