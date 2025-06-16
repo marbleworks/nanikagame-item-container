@@ -9,15 +9,8 @@ namespace NanikaGame
     public class PriceRestrictedItemContainer : ItemContainer
     {
         /// <summary>
-        /// Amount of currency the owner currently has.
-        /// This value is used when <see cref="GetMoneyFunc"/> is not set.
-        /// </summary>
-        public int Money { get; set; }
-
-        /// <summary>
         /// Optional function that returns the current amount of money.
-        /// When provided, this value is used for price checks instead of
-        /// the <see cref="Money"/> property.
+        /// When provided, this value is used for price checks.
         /// </summary>
         public Func<int> GetMoneyFunc { get; set; }
 
@@ -35,7 +28,7 @@ namespace NanikaGame
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PriceRestrictedItemContainer"/> class
-        /// with a default capacity of 5 and zero money.
+        /// with a default capacity of 5.
         /// </summary>
         public PriceRestrictedItemContainer()
         {
@@ -43,13 +36,11 @@ namespace NanikaGame
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PriceRestrictedItemContainer"/> class
-        /// with the specified capacity and starting money.
+        /// with the specified capacity.
         /// </summary>
         /// <param name="capacity">Container capacity.</param>
-        /// <param name="money">Starting amount of money.</param>
-        public PriceRestrictedItemContainer(int capacity, int money) : base(capacity)
+        public PriceRestrictedItemContainer(int capacity) : base(capacity)
         {
-            Money = money;
         }
 
         /// <inheritdoc />
@@ -58,7 +49,7 @@ namespace NanikaGame
             if (item == null)
                 return false;
 
-            var currentMoney = GetMoneyFunc != null ? GetMoneyFunc() : Money;
+            var currentMoney = GetMoneyFunc?.Invoke() ?? 0;
             return currentMoney >= item.Price;
         }
 
@@ -68,7 +59,6 @@ namespace NanikaGame
             if (item != null && destination != this)
             {
                 UseMoneyAction?.Invoke(item.Price);
-                Money -= item.Price;
             }
         }
 
@@ -78,7 +68,6 @@ namespace NanikaGame
             if (item != null && source != this)
             {
                 RefundMoneyAction?.Invoke(item.Price);
-                Money += item.Price;
             }
         }
     }
