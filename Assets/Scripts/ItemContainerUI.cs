@@ -51,6 +51,9 @@ namespace NanikaGame
             var slot = ItemSlotUI.DraggedSlot;
             if (slot == null || Container == null)
                 return;
+            // Cancel the move if dropping onto the same container
+            if (slot.Container == Container)
+                return;
 
             slot.Container.MoveToFirstEmptySlot(Container, slot.Index);
             slot.Refresh();
