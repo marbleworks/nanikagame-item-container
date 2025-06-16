@@ -1,3 +1,5 @@
+using TMPro;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace NanikaGame
@@ -8,26 +10,26 @@ namespace NanikaGame
     public class PriceItemSlotUI : ItemSlotUI
     {
         /// <summary>UI text used to show the item's price.</summary>
-        public Text PriceLabel;
+        public TextMeshProUGUI priceLabel;
 
         /// <inheritdoc />
         public override void Refresh()
         {
             base.Refresh();
 
-            if (PriceLabel == null || Container == null)
+            if (priceLabel == null || Container == null)
                 return;
 
             var item = Container.Items[Index];
             if (item != null)
             {
-                PriceLabel.text = item.Price.ToString();
-                PriceLabel.enabled = true;
+                priceLabel.text = item.Price.ToString();
+                priceLabel.enabled = true;
             }
             else
             {
-                PriceLabel.text = string.Empty;
-                PriceLabel.enabled = false;
+                priceLabel.text = string.Empty;
+                priceLabel.enabled = false;
             }
         }
     }
