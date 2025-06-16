@@ -62,13 +62,23 @@ namespace NanikaGame
             Refresh();
         }
 
-        /// <summary>Refreshes the icon visibility.</summary>
+        /// <summary>Refreshes the icon sprite and visibility.</summary>
         public void Refresh()
         {
             if (Icon == null || Container == null)
                 return;
 
-            Icon.enabled = Container.Items[Index] != null;
+            var item = Container.Items[Index];
+            if (item != null)
+            {
+                Icon.sprite = item.Icon;
+                Icon.enabled = true;
+            }
+            else
+            {
+                Icon.sprite = null;
+                Icon.enabled = false;
+            }
         }
 
         /// <inheritdoc />
