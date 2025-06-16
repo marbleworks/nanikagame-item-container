@@ -63,7 +63,7 @@ namespace NanikaGame
         }
 
         /// <summary>Refreshes the icon sprite and visibility.</summary>
-        public void Refresh()
+        public virtual void Refresh()
         {
             if (Icon == null || Container == null)
                 return;
