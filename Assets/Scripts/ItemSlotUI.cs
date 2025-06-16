@@ -24,10 +24,38 @@ namespace NanikaGame
 
         private void Awake()
         {
+            Refresh();
+        }
+
+        private void OnEnable()
+        {
             if (Container != null)
-            {
                 Container.Changed += Refresh;
-            }
+        }
+
+        private void OnDisable()
+        {
+            if (Container != null)
+                Container.Changed -= Refresh;
+        }
+
+        /// <summary>
+        /// Configures this slot with the given container and index.
+        /// Can be called after the object is instantiated.
+        /// </summary>
+        /// <param name="container">Container to display.</param>
+        /// <param name="index">Slot index.</param>
+        public void Setup(ItemContainer container, int index)
+        {
+            if (Container != null)
+                Container.Changed -= Refresh;
+
+            Container = container;
+            Index = index;
+
+            if (isActiveAndEnabled && Container != null)
+                Container.Changed += Refresh;
+
             Refresh();
         }
 

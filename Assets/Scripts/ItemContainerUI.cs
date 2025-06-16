@@ -12,6 +12,21 @@ namespace NanikaGame
         /// <summary>Item container represented by this UI.</summary>
         public ItemContainer Container;
 
+        /// <summary>Prefab used to create slot UIs.</summary>
+        public ItemSlotUI SlotPrefab;
+
+        private void Awake()
+        {
+            if (Container == null || SlotPrefab == null)
+                return;
+
+            for (int i = 0; i < Container.Capacity; i++)
+            {
+                var slot = Instantiate(SlotPrefab, transform);
+                slot.Setup(Container, i);
+            }
+        }
+
         /// <inheritdoc />
         public void OnDrop(PointerEventData eventData)
         {
