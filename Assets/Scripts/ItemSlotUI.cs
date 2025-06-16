@@ -92,6 +92,9 @@ namespace NanikaGame
             dragIcon.raycastTarget = false;
             dragIcon.rectTransform.sizeDelta = Icon.rectTransform.sizeDelta;
             dragIcon.rectTransform.position = eventData.position;
+
+            // Hide the icon in the original slot while dragging
+            Icon.enabled = false;
         }
 
         /// <inheritdoc />
@@ -110,6 +113,9 @@ namespace NanikaGame
                 Destroy(dragIcon.gameObject);
                 dragIcon = null;
             }
+
+            // Restore icon visibility based on container contents
+            Refresh();
         }
 
         /// <inheritdoc />
