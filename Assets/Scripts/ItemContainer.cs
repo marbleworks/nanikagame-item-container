@@ -53,6 +53,60 @@ namespace NanikaGame
         public bool AllowExternalMove { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether items in this container can
+        /// be swapped with items from another container. This is enabled by
+        /// default.
+        /// </summary>
+        public bool AllowExternalSwap { get; set; } = true;
+
+        /// <summary>
+        /// Determines whether this container is willing to accept the given
+        /// <paramref name="item"/> from the specified <paramref name="source"/>.
+        /// Derived containers can override this to impose custom restrictions
+        /// on item transfers.
+        /// </summary>
+        /// <param name="item">Item that is being moved.</param>
+        /// <param name="source">Container from which the item originates.</param>
+        /// <returns>True if the item can be added; otherwise false.</returns>
+        protected virtual bool CanReceiveItem(Item item, ItemContainer source)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Determines whether this container is willing to give the specified
+        /// <paramref name="item"/> to the <paramref name="destination"/>.
+        /// Derived containers can override this to impose custom restrictions
+        /// before an item leaves the container.
+        /// </summary>
+        /// <param name="item">Item that will be moved out.</param>
+        /// <param name="destination">Container that wants to receive the item.</param>
+        /// <returns>True if the item can be removed; otherwise false.</returns>
+        protected virtual bool CanSendItem(Item item, ItemContainer destination)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Called after an item is successfully moved from this container to
+        /// another container.
+        /// </summary>
+        /// <param name="item">Item that was moved out.</param>
+        /// <param name="destination">Container that received the item.</param>
+        protected virtual void OnItemMovedAway(Item item, ItemContainer destination)
+        {
+        }
+
+        /// <summary>
+        /// Called after an item has been received from another container.
+        /// </summary>
+        /// <param name="item">Item that was added.</param>
+        /// <param name="source">Container from which the item originated.</param>
+        protected virtual void OnItemReceived(Item item, ItemContainer source)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ItemContainer"/> class
         /// with a default capacity of 5.
         /// </summary>
@@ -209,8 +263,29 @@ namespace NanikaGame
 
             var destItem = destination.Items[toIndex];
 
+            if (destItem != null && destination != this && (!AllowExternalSwap || !destination.AllowExternalSwap))
+                return false;
+
+            if (!CanSendItem(item, destination))
+                return false;
+
+            if (!destination.CanReceiveItem(item, this))
+                return false;
+
             Items[fromIndex] = destItem;
             destination.Items[toIndex] = item;
+
+            if (destination != this)
+            {
+                OnItemMovedAway(item, destination);
+                destination.OnItemReceived(item, this);
+
+                if (destItem != null)
+                {
+                    destination.OnItemMovedAway(destItem, this);
+                    OnItemReceived(destItem, destination);
+                }
+            }
 
             Changed?.Invoke();
             if (destination != this)
@@ -243,12 +318,24 @@ namespace NanikaGame
             if (item == null)
                 return false;
 
+            if (!CanSendItem(item, destination))
+                return false;
+
+            if (!destination.CanReceiveItem(item, this))
+                return false;
+
             var emptyIndex = Array.IndexOf(destination.Items, null);
             if (emptyIndex == -1)
                 return false;
 
             Items[fromIndex] = null;
             destination.Items[emptyIndex] = item;
+
+            if (destination != this)
+            {
+                OnItemMovedAway(item, destination);
+                destination.OnItemReceived(item, this);
+            }
 
             Changed?.Invoke();
             if (destination != this)
