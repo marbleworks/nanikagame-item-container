@@ -11,8 +11,6 @@ namespace NanikaGame
     {
         /// <summary>
         /// Optional function that returns the current amount of money.
-            AllowExternalSwap = false;
-            AllowExternalSwap = false;
         /// When provided, this value is used for price checks.
         /// </summary>
         public Func<int> GetMoneyFunc { get; set; }
@@ -31,20 +29,11 @@ namespace NanikaGame
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PriceRestrictedItemContainer"/> class
-        /// <inheritdoc />
-        protected override bool CanSendItem(Item item, ItemContainer destination)
-        {
-            if (item == null || destination == this)
-                return true;
-
-            var currentMoney = GetMoneyFunc != null ? GetMoneyFunc() : Money;
-            return currentMoney >= item.Price;
-        }
-
         /// with a default capacity of 5.
         /// </summary>
         public PriceRestrictedItemContainer()
         {
+            AllowExternalSwap = false;
         }
 
         /// <summary>
@@ -54,6 +43,17 @@ namespace NanikaGame
         /// <param name="capacity">Container capacity.</param>
         public PriceRestrictedItemContainer(int capacity) : base(capacity)
         {
+            AllowExternalSwap = false;
+        }
+
+        /// <inheritdoc />
+        protected override bool CanSendItem(Item item, ItemContainer destination)
+        {
+            if (item == null || destination == this)
+                return true;
+
+            var currentMoney = GetMoneyFunc?.Invoke() ?? 0;
+            return currentMoney >= item.Price;
         }
 
         /// <inheritdoc />
