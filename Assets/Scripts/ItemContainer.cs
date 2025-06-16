@@ -47,6 +47,12 @@ namespace NanikaGame
         public bool AllowInternalMove { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether this container accepts
+        /// moves from other containers.
+        /// </summary>
+        public bool AllowExternalMove { get; set; } = true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ItemContainer"/> class
         /// with a default capacity of 5.
         /// </summary>
@@ -194,6 +200,8 @@ namespace NanikaGame
 
             if (destination == this && !AllowInternalMove)
                 return false;
+            if (destination != this && !destination.AllowExternalMove)
+                return false;
 
             var item = Items[fromIndex];
             if (item == null)
@@ -227,6 +235,8 @@ namespace NanikaGame
                 return false;
 
             if (destination == this && !AllowInternalMove)
+                return false;
+            if (destination != this && !destination.AllowExternalMove)
                 return false;
 
             var item = Items[fromIndex];
