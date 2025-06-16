@@ -16,7 +16,8 @@ This repository contains scripts for an item container system in Unity.
 
 - **Money**: Current amount of currency available.
 - **GetMoneyFunc**: Optional function returning the current amount of money. When set, this is used for price checks instead of `Money`.
-- Items can only be moved into this container if the available money (from `GetMoneyFunc` or `Money`) is greater than or equal to the item's `Price`.
-- **UseMoneyAction**: Optional callback invoked with an item's price when it leaves the container.
+- Items can only be moved *into* this container if the available money (from `GetMoneyFunc` or `Money`) is at least the item's `Price`.
+- Items can only be moved *out of* this container when `GetMoneyFunc` reports funds equal to or exceeding the item's `Price`.
+- **UseMoneyAction**: Optional callback invoked with an item's price when it leaves the container. `Money` decreases by that amount.
 - **RefundMoneyAction**: Optional callback invoked with an item's price when it is returned.
-- When an item is moved to another container, `Money` decreases by the item's price and `UseMoneyAction` is called if set.
+  `Money` increases by that amount.

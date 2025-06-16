@@ -67,6 +67,20 @@ namespace NanikaGame
         }
 
         /// <summary>
+        /// Determines whether this container is willing to give the specified
+        /// <paramref name="item"/> to the <paramref name="destination"/>.
+        /// Derived containers can override this to impose custom restrictions
+        /// before an item leaves the container.
+        /// </summary>
+        /// <param name="item">Item that will be moved out.</param>
+        /// <param name="destination">Container that wants to receive the item.</param>
+        /// <returns>True if the item can be removed; otherwise false.</returns>
+        protected virtual bool CanSendItem(Item item, ItemContainer destination)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Called after an item is successfully moved from this container to
         /// another container.
         /// </summary>
@@ -240,6 +254,9 @@ namespace NanikaGame
             if (item == null)
                 return false;
 
+            if (!CanSendItem(item, destination))
+                return false;
+
             if (!destination.CanReceiveItem(item, this))
                 return false;
 
@@ -289,6 +306,9 @@ namespace NanikaGame
 
             var item = Items[fromIndex];
             if (item == null)
+                return false;
+
+            if (!CanSendItem(item, destination))
                 return false;
 
             if (!destination.CanReceiveItem(item, this))

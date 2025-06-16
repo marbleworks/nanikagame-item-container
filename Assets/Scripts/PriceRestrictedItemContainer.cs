@@ -28,6 +28,16 @@ namespace NanikaGame
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PriceRestrictedItemContainer"/> class
+        /// <inheritdoc />
+        protected override bool CanSendItem(Item item, ItemContainer destination)
+        {
+            if (item == null || destination == this)
+                return true;
+
+            var currentMoney = GetMoneyFunc != null ? GetMoneyFunc() : Money;
+            return currentMoney >= item.Price;
+        }
+
         /// with a default capacity of 5.
         /// </summary>
         public PriceRestrictedItemContainer()
