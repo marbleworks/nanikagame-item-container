@@ -4,12 +4,15 @@ namespace NanikaGame
 {
     /// <summary>
     /// Item container that only accepts items when the user has enough money
-    /// to cover the item's price.
+    /// to cover the item's price. Swapping with items from other containers
+    /// is disallowed by default.
     /// </summary>
     public class PriceRestrictedItemContainer : ItemContainer
     {
         /// <summary>
         /// Optional function that returns the current amount of money.
+            AllowExternalSwap = false;
+            AllowExternalSwap = false;
         /// When provided, this value is used for price checks.
         /// </summary>
         public Func<int> GetMoneyFunc { get; set; }

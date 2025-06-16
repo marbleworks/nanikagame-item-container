@@ -11,6 +11,8 @@ This repository contains scripts for an item container system in Unity.
 - **AllowInternalMove**: When set to `false`, items cannot be moved between slots in the same container. This is enabled by default.
 - **AllowExternalMove**: When set to `false`, this container will not accept
   items moved from other containers.
+- **AllowExternalSwap**: When set to `false`, this container cannot swap items
+  with other containers.
 
 ### PriceRestrictedItemContainer
 
@@ -21,3 +23,4 @@ This repository contains scripts for an item container system in Unity.
 - **UseMoneyAction**: Optional callback invoked with an item's price when it leaves the container. `Money` decreases by that amount.
 - **RefundMoneyAction**: Optional callback invoked with an item's price when it is returned.
   `Money` increases by that amount.
+- Swapping items with other containers is disabled by default.

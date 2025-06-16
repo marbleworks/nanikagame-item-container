@@ -53,6 +53,13 @@ namespace NanikaGame
         public bool AllowExternalMove { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether items in this container can
+        /// be swapped with items from another container. This is enabled by
+        /// default.
+        /// </summary>
+        public bool AllowExternalSwap { get; set; } = true;
+
+        /// <summary>
         /// Determines whether this container is willing to accept the given
         /// <paramref name="item"/> from the specified <paramref name="source"/>.
         /// Derived containers can override this to impose custom restrictions
@@ -254,13 +261,16 @@ namespace NanikaGame
             if (item == null)
                 return false;
 
+            var destItem = destination.Items[toIndex];
+
+            if (destItem != null && destination != this && (!AllowExternalSwap || !destination.AllowExternalSwap))
+                return false;
+
             if (!CanSendItem(item, destination))
                 return false;
 
             if (!destination.CanReceiveItem(item, this))
                 return false;
-
-            var destItem = destination.Items[toIndex];
 
             Items[fromIndex] = destItem;
             destination.Items[toIndex] = item;
