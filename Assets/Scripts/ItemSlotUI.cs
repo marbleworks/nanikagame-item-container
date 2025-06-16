@@ -8,7 +8,7 @@ namespace NanikaGame
     /// UI component representing a single slot in an <see cref="ItemContainer"/>.
     /// Supports drag and drop between slots and containers.
     /// </summary>
-    public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDropHandler
+    public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
         /// <summary>Associated item container.</summary>
         public ItemContainer Container;
@@ -21,6 +21,9 @@ namespace NanikaGame
 
         /// <summary>Currently dragged slot.</summary>
         public static ItemSlotUI DraggedSlot { get; private set; }
+
+        /// <summary>Icon displayed while dragging.</summary>
+        private static Image dragIcon;
 
         private void Awake()
         {
@@ -71,18 +74,42 @@ namespace NanikaGame
         /// <inheritdoc />
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (Container == null)
+            if (Container == null || Icon == null)
                 return;
             if (Container.Items[Index] == null)
                 return;
 
             DraggedSlot = this;
+
+            var canvas = GetComponentInParent<Canvas>();
+            if (canvas == null)
+                return;
+
+            dragIcon = new GameObject("DragIcon").AddComponent<Image>();
+            dragIcon.sprite = Icon.sprite;
+            dragIcon.transform.SetParent(canvas.transform, false);
+            dragIcon.transform.SetAsLastSibling();
+            dragIcon.raycastTarget = false;
+            dragIcon.rectTransform.sizeDelta = Icon.rectTransform.sizeDelta;
+            dragIcon.rectTransform.position = eventData.position;
+        }
+
+        /// <inheritdoc />
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (dragIcon != null)
+                dragIcon.rectTransform.position = eventData.position;
         }
 
         /// <inheritdoc />
         public void OnEndDrag(PointerEventData eventData)
         {
             DraggedSlot = null;
+            if (dragIcon != null)
+            {
+                Destroy(dragIcon.gameObject);
+                dragIcon = null;
+            }
         }
 
         /// <inheritdoc />
