@@ -41,6 +41,12 @@ namespace NanikaGame
         public bool IsEmpty => Count == 0;
 
         /// <summary>
+        /// Gets or sets a value indicating whether items can be moved
+        /// between slots within this container.
+        /// </summary>
+        public bool AllowInternalMove { get; set; } = true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ItemContainer"/> class
         /// with a default capacity of 5.
         /// </summary>
@@ -186,6 +192,9 @@ namespace NanikaGame
             if (!IsIndexValid(fromIndex) || !destination.IsIndexValid(toIndex))
                 return false;
 
+            if (destination == this && !AllowInternalMove)
+                return false;
+
             var item = Items[fromIndex];
             if (item == null)
                 return false;
@@ -215,6 +224,9 @@ namespace NanikaGame
                 throw new ArgumentNullException(nameof(destination));
 
             if (!IsIndexValid(fromIndex))
+                return false;
+
+            if (destination == this && !AllowInternalMove)
                 return false;
 
             var item = Items[fromIndex];
