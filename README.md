@@ -28,3 +28,16 @@ This repository contains scripts for an item container system in Unity.
 - **RefundMoneyAction**: Optional callback invoked with an item's price when it is returned.
   `Money` increases by that amount.
 - Swapping items with other containers is disabled by default.
+
+### SellingItemContainer
+
+- **WatchedContainers**: Array of containers monitored for drag events.
+- **GetPriceFunc**: Callback used to determine the selling price of each item.
+- When an item enters the container, the price from `GetPriceFunc` (or `EffectivePrice` if not set) is provided to `AddMoneyAction` and the item is removed.
+- **AddMoneyAction**: Optional callback invoked with the earned price.
+- Items cannot be moved out once placed in the container.
+
+### SellingItemSlotUI
+
+- Displays the selling price of an item being dragged from a container listed in `WatchedContainers`.
+- Uses `GetPriceFunc` from the associated <code>SellingItemContainer</code> to obtain the price.
