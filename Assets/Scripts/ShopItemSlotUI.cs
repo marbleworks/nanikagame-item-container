@@ -10,6 +10,9 @@ namespace NanikaGame
     /// </summary>
     public class ShopItemSlotUI : ItemSlotUI
     {
+        /// <summary>Toggle used to lock/unlock this slot.</summary>
+        public Toggle LockToggle;
+
         /// <summary>UI text used to show the item's price.</summary>
         public TextMeshProUGUI priceLabel;
 
@@ -22,10 +25,28 @@ namespace NanikaGame
         /// </summary>
         public GameObject discountLabelParent;
 
+        private void Awake()
+        {
+            if (LockToggle != null)
+                LockToggle.onValueChanged.AddListener(OnLockToggleChanged);
+
+            // base Awake simply refreshes the slot
+            Refresh();
+        }
+
+        private void OnDestroy()
+        {
+            if (LockToggle != null)
+                LockToggle.onValueChanged.RemoveListener(OnLockToggleChanged);
+        }
+
         /// <inheritdoc />
         public override void Refresh()
         {
             base.Refresh();
+
+            if (LockToggle != null && Container != null)
+                LockToggle.isOn = Container.IsLocked(Index);
 
             if (priceLabel == null || Container == null)
                 return;
@@ -75,6 +96,12 @@ namespace NanikaGame
                 else if (discountLabel != null)
                     discountLabel.enabled = false;
             }
+        }
+
+        private void OnLockToggleChanged(bool isOn)
+        {
+            if (Container != null)
+                Container.SetLocked(Index, isOn);
         }
     }
 }

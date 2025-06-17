@@ -19,8 +19,6 @@ namespace NanikaGame
         /// <summary>Image used to display the item.</summary>
         public Image Icon;
 
-        /// <summary>Toggle used to lock/unlock this slot.</summary>
-        public Toggle LockToggle;
 
         /// <summary>Currently dragged slot.</summary>
         public static ItemSlotUI DraggedSlot { get; private set; }
@@ -30,8 +28,6 @@ namespace NanikaGame
 
         private void Awake()
         {
-            if (LockToggle != null)
-                LockToggle.onValueChanged.AddListener(OnLockToggleChanged);
             Refresh();
         }
 
@@ -47,11 +43,6 @@ namespace NanikaGame
                 Container.Changed -= Refresh;
         }
 
-        private void OnDestroy()
-        {
-            if (LockToggle != null)
-                LockToggle.onValueChanged.RemoveListener(OnLockToggleChanged);
-        }
 
         /// <summary>
         /// Configures this slot with the given container and index.
@@ -69,9 +60,6 @@ namespace NanikaGame
 
             if (isActiveAndEnabled && Container != null)
                 Container.Changed += Refresh;
-
-            if (LockToggle != null)
-                LockToggle.isOn = Container != null && Container.IsLocked(Index);
 
             Refresh();
         }
@@ -94,8 +82,6 @@ namespace NanikaGame
                 Icon.enabled = false;
             }
 
-            if (LockToggle != null)
-                LockToggle.isOn = Container.IsLocked(Index);
         }
 
         /// <inheritdoc />
@@ -162,10 +148,5 @@ namespace NanikaGame
             Refresh();
         }
 
-        private void OnLockToggleChanged(bool isOn)
-        {
-            if (Container != null)
-                Container.SetLocked(Index, isOn);
-        }
     }
 }
