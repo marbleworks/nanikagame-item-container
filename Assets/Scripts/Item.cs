@@ -25,5 +25,12 @@ namespace NanikaGame
         /// Price to display when <see cref="IsDiscounted"/> is true.
         /// </summary>
         public int DiscountedPrice;
+
+        /// <summary>
+        /// Gets the price that should be used for purchase logic.
+        /// Returns <see cref="DiscountedPrice"/> when <see cref="IsDiscounted"/> is true;
+        /// otherwise returns <see cref="Price"/>.
+        /// </summary>
+        public int EffectivePrice => IsDiscounted ? DiscountedPrice : Price;
     }
 }
