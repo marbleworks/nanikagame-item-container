@@ -237,6 +237,7 @@ namespace NanikaGame
             OnChanged();
             return true;
         }
+
         /// <summary>
         /// Checks whether the given index is within the valid range of slots.
         /// </summary>
