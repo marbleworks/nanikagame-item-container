@@ -45,13 +45,18 @@ namespace NanikaGame
         {
             base.Refresh();
 
-            if (LockToggle != null && Container != null)
-                LockToggle.isOn = Container.IsLocked(Index);
+            var item = Container != null ? Container.Items[Index] : null;
+
+            if (LockToggle != null)
+            {
+                bool hasItem = item != null;
+                LockToggle.gameObject.SetActive(hasItem);
+                if (hasItem && Container != null)
+                    LockToggle.isOn = Container.IsLocked(Index);
+            }
 
             if (priceLabel == null || Container == null)
                 return;
-
-            var item = Container.Items[Index];
             if (item != null)
             {
                 priceLabel.text = item.Price.ToString();
