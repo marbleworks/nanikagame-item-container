@@ -5,6 +5,8 @@ This repository contains scripts for an item container system in Unity.
 ### Item
 
 - **Price**: Integer value representing the in-game cost of the item.
+- **IsDiscounted**: Indicates whether the item is currently on sale.
+- **DiscountedPrice**: Price shown when the item is discounted.
 
 ### ItemContainer
 

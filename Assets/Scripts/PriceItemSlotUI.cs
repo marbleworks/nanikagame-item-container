@@ -12,6 +12,9 @@ namespace NanikaGame
         /// <summary>UI text used to show the item's price.</summary>
         public TextMeshProUGUI priceLabel;
 
+        /// <summary>UI text used to show the discounted price.</summary>
+        public TextMeshProUGUI discountLabel;
+
         /// <inheritdoc />
         public override void Refresh()
         {
@@ -24,12 +27,37 @@ namespace NanikaGame
             if (item != null)
             {
                 priceLabel.text = item.Price.ToString();
+                if (item.IsDiscounted)
+                {
+                    priceLabel.fontStyle = FontStyles.Strikethrough;
+                    if (discountLabel != null)
+                    {
+                        discountLabel.text = item.DiscountedPrice.ToString();
+                        discountLabel.enabled = true;
+                    }
+                }
+                else
+                {
+                    priceLabel.fontStyle = FontStyles.Normal;
+                    if (discountLabel != null)
+                    {
+                        discountLabel.text = string.Empty;
+                        discountLabel.enabled = false;
+                    }
+                }
+
                 priceLabel.enabled = true;
             }
             else
             {
                 priceLabel.text = string.Empty;
+                priceLabel.fontStyle = FontStyles.Normal;
                 priceLabel.enabled = false;
+                if (discountLabel != null)
+                {
+                    discountLabel.text = string.Empty;
+                    discountLabel.enabled = false;
+                }
             }
         }
     }
