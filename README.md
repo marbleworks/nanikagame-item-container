@@ -34,3 +34,7 @@ This repository contains scripts for an item container system in Unity.
 - **Money**: Tracks money earned by selling items.
 - When an item enters the container, its `EffectivePrice` is added to `Money` and the item is removed.
 - Items cannot be moved out once placed in the container.
+
+### SellingItemSlotUI
+
+- Displays the dragged item\x27s selling price while an item is being dragged.
