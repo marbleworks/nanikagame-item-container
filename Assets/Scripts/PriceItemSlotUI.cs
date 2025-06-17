@@ -15,6 +15,12 @@ namespace NanikaGame
         /// <summary>UI text used to show the discounted price.</summary>
         public TextMeshProUGUI discountLabel;
 
+        /// <summary>
+        /// Parent object that contains <see cref="discountLabel"/>. This is
+        /// toggled on and off when displaying discounted items.
+        /// </summary>
+        public GameObject discountLabelParent;
+
         /// <inheritdoc />
         public override void Refresh()
         {
@@ -33,8 +39,11 @@ namespace NanikaGame
                     if (discountLabel != null)
                     {
                         discountLabel.text = item.DiscountedPrice.ToString();
-                        discountLabel.enabled = true;
                     }
+                    if (discountLabelParent != null)
+                        discountLabelParent.SetActive(true);
+                    else if (discountLabel != null)
+                        discountLabel.enabled = true;
                 }
                 else
                 {
@@ -42,8 +51,11 @@ namespace NanikaGame
                     if (discountLabel != null)
                     {
                         discountLabel.text = string.Empty;
-                        discountLabel.enabled = false;
                     }
+                    if (discountLabelParent != null)
+                        discountLabelParent.SetActive(false);
+                    else if (discountLabel != null)
+                        discountLabel.enabled = false;
                 }
 
                 priceLabel.enabled = true;
@@ -56,8 +68,11 @@ namespace NanikaGame
                 if (discountLabel != null)
                 {
                     discountLabel.text = string.Empty;
-                    discountLabel.enabled = false;
                 }
+                if (discountLabelParent != null)
+                    discountLabelParent.SetActive(false);
+                else if (discountLabel != null)
+                    discountLabel.enabled = false;
             }
         }
     }
