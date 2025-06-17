@@ -8,7 +8,7 @@ namespace NanikaGame
     /// <summary>
     /// Slot UI that displays an item's price in addition to its icon.
     /// </summary>
-    public class PriceItemSlotUI : ItemSlotUI
+    public class ShopItemSlotUI : ItemSlotUI
     {
         /// <summary>UI text used to show the item's price.</summary>
         public TextMeshProUGUI priceLabel;

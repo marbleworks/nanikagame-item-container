@@ -7,7 +7,7 @@ namespace NanikaGame
     /// to cover the item's price. Swapping with items from other containers
     /// is disallowed by default.
     /// </summary>
-    public class PriceRestrictedItemContainer : ItemContainer
+    public class ShopItemContainer : ItemContainer
     {
         /// <summary>
         /// Optional function that returns the current amount of money.
@@ -28,20 +28,20 @@ namespace NanikaGame
         public Action<int> RefundMoneyAction { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PriceRestrictedItemContainer"/> class
+        /// Initializes a new instance of the <see cref="ShopItemContainer"/> class
         /// with a default capacity of 5.
         /// </summary>
-        public PriceRestrictedItemContainer()
+        public ShopItemContainer()
         {
             AllowExternalSwap = false;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PriceRestrictedItemContainer"/> class
+        /// Initializes a new instance of the <see cref="ShopItemContainer"/> class
         /// with the specified capacity.
         /// </summary>
         /// <param name="capacity">Container capacity.</param>
-        public PriceRestrictedItemContainer(int capacity) : base(capacity)
+        public ShopItemContainer(int capacity) : base(capacity)
         {
             AllowExternalSwap = false;
         }
