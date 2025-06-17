@@ -18,7 +18,7 @@ This repository contains scripts for an item container system in Unity.
 - **AllowExternalSwap**: When set to `false`, this container cannot swap items
   with other containers.
 
-### PriceRestrictedItemContainer
+### ShopItemContainer
 
 - **Money**: Current amount of currency available.
 - **GetMoneyFunc**: Optional function returning the current amount of money. When set, this is used for price checks instead of `Money`.
