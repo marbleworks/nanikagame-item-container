@@ -8,7 +8,6 @@ namespace NanikaGame
     /// </summary>
     public class SellingItemContainer : ItemContainer
     {
-
         /// <summary>
         /// Containers monitored for drag events.
         /// </summary>
