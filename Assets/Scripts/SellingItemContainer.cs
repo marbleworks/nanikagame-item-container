@@ -20,9 +20,10 @@ namespace NanikaGame
         public Func<Item, int> GetPriceFunc { get; set; }
 
         /// <summary>
-        /// Optional callback invoked with the item's price when sold.
+        /// Optional callback invoked when an item is sold.
+        /// The sold <see cref="Item"/> is provided as the argument.
         /// </summary>
-        public Action<int> AddMoneyAction { get; set; }
+        public Action<Item> SellItemAction { get; set; }
 
         /// <inheritdoc />
         protected override bool CanSendItem(Item item, ItemContainer destination)
@@ -37,8 +38,10 @@ namespace NanikaGame
             if (item == null)
                 return;
 
-            int price = GetPriceFunc?.Invoke(item) ?? item.EffectivePrice;
-            AddMoneyAction?.Invoke(price);
+            // Notify external systems that the item has been sold.
+            // Price information can be obtained via <see cref="GetPriceFunc"/> or
+            // <see cref="Item.EffectivePrice"/> if needed.
+            SellItemAction?.Invoke(item);
 
             // Remove the item from this container after selling it.
             Items[index] = null;
