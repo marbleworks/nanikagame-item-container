@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NanikaGame
 {
@@ -9,6 +10,11 @@ namespace NanikaGame
     /// </summary>
     public class ShopItemContainer : ItemContainer
     {
+        /// <summary>
+        /// Gets the lock state for each slot. The length matches <see cref="Capacity"/>.
+        /// </summary>
+        public bool[] LockedSlots { get; }
+
         /// <summary>
         /// Optional function that returns the current amount of money.
         /// When provided, this value is used for price checks.
@@ -34,6 +40,7 @@ namespace NanikaGame
         public ShopItemContainer()
         {
             AllowExternalSwap = false;
+            LockedSlots = new bool[Capacity];
         }
 
         /// <summary>
@@ -44,6 +51,7 @@ namespace NanikaGame
         public ShopItemContainer(int capacity) : base(capacity)
         {
             AllowExternalSwap = false;
+            LockedSlots = new bool[capacity];
         }
 
         /// <inheritdoc />
@@ -67,21 +75,63 @@ namespace NanikaGame
         }
 
         /// <inheritdoc />
-        protected override void OnItemMovedAway(Item item, ItemContainer destination)
+        protected override void OnItemMovedAway(Item item, int index, ItemContainer destination)
         {
             if (item != null && destination != this)
             {
+                SetLocked(index, false);
                 UseMoneyAction?.Invoke(item.EffectivePrice);
             }
         }
 
         /// <inheritdoc />
-        protected override void OnItemReceived(Item item, ItemContainer source)
+        protected override void OnItemReceived(Item item, int index, ItemContainer source)
         {
             if (item != null && source != this)
             {
                 RefundMoneyAction?.Invoke(item.EffectivePrice);
             }
+        }
+
+        /// <summary>
+        /// Sets the lock state of the specified slot.
+        /// </summary>
+        /// <param name="index">Slot index.</param>
+        /// <param name="locked">True to lock the slot; false to unlock.</param>
+        public void SetLocked(int index, bool locked)
+        {
+            if (!IsIndexValid(index))
+                return;
+
+            if (LockedSlots[index] == locked)
+                return;
+
+            LockedSlots[index] = locked;
+            OnChanged();
+        }
+
+        /// <summary>
+        /// Gets whether the specified slot is locked.
+        /// </summary>
+        /// <param name="index">Slot index.</param>
+        public bool IsLocked(int index)
+        {
+            return IsIndexValid(index) && LockedSlots[index];
+        }
+
+        /// <summary>
+        /// Returns the indices of all locked slots.
+        /// </summary>
+        public int[] GetLockedIndices()
+        {
+            var list = new System.Collections.Generic.List<int>();
+            for (int i = 0; i < Capacity; i++)
+            {
+                if (LockedSlots[i])
+                    list.Add(i);
+            }
+
+            return list.ToArray();
         }
     }
 }

@@ -20,6 +20,7 @@ namespace NanikaGame
         /// </summary>
         public Item[] Items { get; }
 
+
         /// <summary>
         /// Gets the number of non-null items currently in the container.
         /// </summary>
@@ -29,6 +30,14 @@ namespace NanikaGame
         /// Event that is invoked whenever the contents of the container change.
         /// </summary>
         public event Action Changed;
+
+        /// <summary>
+        /// Raises the <see cref="Changed"/> event.
+        /// </summary>
+        protected void OnChanged()
+        {
+            Changed?.Invoke();
+        }
 
         /// <summary>
         /// Gets a value indicating whether the container is full.
@@ -92,8 +101,9 @@ namespace NanikaGame
         /// another container.
         /// </summary>
         /// <param name="item">Item that was moved out.</param>
+        /// <param name="index">Slot index the item occupied.</param>
         /// <param name="destination">Container that received the item.</param>
-        protected virtual void OnItemMovedAway(Item item, ItemContainer destination)
+        protected virtual void OnItemMovedAway(Item item, int index, ItemContainer destination)
         {
         }
 
@@ -101,8 +111,9 @@ namespace NanikaGame
         /// Called after an item has been received from another container.
         /// </summary>
         /// <param name="item">Item that was added.</param>
+        /// <param name="index">Slot index where the item was placed.</param>
         /// <param name="source">Container from which the item originated.</param>
-        protected virtual void OnItemReceived(Item item, ItemContainer source)
+        protected virtual void OnItemReceived(Item item, int index, ItemContainer source)
         {
         }
 
@@ -155,7 +166,7 @@ namespace NanikaGame
         public void Clear()
         {
             Array.Clear(Items, 0, Capacity);
-            Changed?.Invoke();
+            OnChanged();
         }
 
         /// <summary>
@@ -169,9 +180,10 @@ namespace NanikaGame
                 return false;
 
             Array.Copy(items, Items, Capacity);
-            Changed?.Invoke();
+            OnChanged();
             return true;
         }
+
 
         /// <summary>
         /// Sets the item at the given index and triggers the <see cref="Changed"/> event.
@@ -185,7 +197,7 @@ namespace NanikaGame
                 return false;
 
             Items[index] = item;
-            Changed?.Invoke();
+            OnChanged();
             return true;
         }
 
@@ -222,7 +234,7 @@ namespace NanikaGame
                 return false;
 
             Items[index] = null;
-            Changed?.Invoke();
+            OnChanged();
             return true;
         }
         /// <summary>
@@ -277,19 +289,19 @@ namespace NanikaGame
 
             if (destination != this)
             {
-                OnItemMovedAway(item, destination);
-                destination.OnItemReceived(item, this);
+                OnItemMovedAway(item, fromIndex, destination);
+                destination.OnItemReceived(item, toIndex, this);
 
                 if (destItem != null)
                 {
-                    destination.OnItemMovedAway(destItem, this);
-                    OnItemReceived(destItem, destination);
+                    destination.OnItemMovedAway(destItem, toIndex, this);
+                    OnItemReceived(destItem, fromIndex, destination);
                 }
             }
 
-            Changed?.Invoke();
+            OnChanged();
             if (destination != this)
-                destination.Changed?.Invoke();
+                destination.OnChanged();
 
             return true;
         }
@@ -333,13 +345,13 @@ namespace NanikaGame
 
             if (destination != this)
             {
-                OnItemMovedAway(item, destination);
-                destination.OnItemReceived(item, this);
+                OnItemMovedAway(item, fromIndex, destination);
+                destination.OnItemReceived(item, emptyIndex, this);
             }
 
-            Changed?.Invoke();
+            OnChanged();
             if (destination != this)
-                destination.Changed?.Invoke();
+                destination.OnChanged();
 
             return true;
         }
