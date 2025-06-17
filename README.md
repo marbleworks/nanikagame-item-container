@@ -37,4 +37,4 @@ This repository contains scripts for an item container system in Unity.
 
 ### SellingItemSlotUI
 
-- Displays the dragged item\x27s selling price while an item is being dragged.
+- Displays the selling price of an item being dragged from another container.

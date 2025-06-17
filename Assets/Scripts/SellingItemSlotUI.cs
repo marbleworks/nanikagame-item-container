@@ -18,7 +18,10 @@ namespace NanikaGame
                 return;
 
             var dragged = DraggedSlot;
-            var item = dragged != null ? dragged.Container.Items[dragged.Index] : null;
+            Item item = null;
+            if (dragged != null && dragged.Container != Container)
+                item = dragged.Container.Items[dragged.Index];
+
             if (item != null)
             {
                 priceLabel.text = item.EffectivePrice.ToString();
