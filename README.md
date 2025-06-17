@@ -17,6 +17,8 @@ This repository contains scripts for an item container system in Unity.
   items moved from other containers.
 - **AllowExternalSwap**: When set to `false`, this container cannot swap items
   with other containers.
+- **DisallowedSources**: Array of containers that are not allowed to move items
+  into this container.
 
 ### ShopItemContainer
 
