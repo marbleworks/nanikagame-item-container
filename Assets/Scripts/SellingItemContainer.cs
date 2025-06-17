@@ -14,6 +14,17 @@ namespace NanikaGame
         public int Money { get; private set; }
 
         /// <summary>
+        /// Containers monitored for drag events.
+        /// </summary>
+        public ItemContainer[] WatchedContainers { get; set; } = Array.Empty<ItemContainer>();
+
+        /// <summary>
+        /// Callback that returns the selling price for a given item.
+        /// If not provided, <see cref="Item.EffectivePrice"/> is used.
+        /// </summary>
+        public Func<Item, int> GetPriceFunc { get; set; }
+
+        /// <summary>
         /// Optional callback invoked with the item's price when sold.
         /// </summary>
         public Action<int> AddMoneyAction { get; set; }
@@ -31,8 +42,9 @@ namespace NanikaGame
             if (item == null)
                 return;
 
-            Money += item.EffectivePrice;
-            AddMoneyAction?.Invoke(item.EffectivePrice);
+            int price = GetPriceFunc?.Invoke(item) ?? item.EffectivePrice;
+            Money += price;
+            AddMoneyAction?.Invoke(price);
 
             // Remove the item from this container after selling it.
             Items[index] = null;

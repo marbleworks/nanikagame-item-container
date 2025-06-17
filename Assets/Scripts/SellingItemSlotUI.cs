@@ -17,14 +17,21 @@ namespace NanikaGame
             if (priceLabel == null)
                 return;
 
+            if (!(Container is SellingItemContainer selling))
+                return;
+
             var dragged = DraggedSlot;
             Item item = null;
-            if (dragged != null && dragged.Container != Container)
+            if (dragged != null && selling.WatchedContainers != null &&
+                System.Array.IndexOf(selling.WatchedContainers, dragged.Container) >= 0)
+            {
                 item = dragged.Container.Items[dragged.Index];
+            }
 
             if (item != null)
             {
-                priceLabel.text = item.EffectivePrice.ToString();
+                int price = selling.GetPriceFunc?.Invoke(item) ?? item.EffectivePrice;
+                priceLabel.text = price.ToString();
                 priceLabel.enabled = true;
             }
             else
