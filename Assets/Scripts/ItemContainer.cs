@@ -20,10 +20,6 @@ namespace NanikaGame
         /// </summary>
         public Item[] Items { get; }
 
-        /// <summary>
-        /// Gets the lock state for each slot. The length matches <see cref="Capacity"/>.
-        /// </summary>
-        public bool[] LockedSlots { get; }
 
         /// <summary>
         /// Gets the number of non-null items currently in the container.
@@ -134,7 +130,6 @@ namespace NanikaGame
 
             Capacity = capacity;
             Items = new Item[capacity];
-            LockedSlots = new bool[capacity];
         }
 
         /// <summary>
@@ -153,7 +148,6 @@ namespace NanikaGame
             Capacity = items.Length;
             Items = new Item[Capacity];
             Array.Copy(items, Items, Capacity);
-            LockedSlots = new bool[Capacity];
         }
 
         /// <summary>
@@ -162,7 +156,6 @@ namespace NanikaGame
         public void Clear()
         {
             Array.Clear(Items, 0, Capacity);
-            Array.Clear(LockedSlots, 0, Capacity);
             Changed?.Invoke();
         }
 
@@ -181,47 +174,6 @@ namespace NanikaGame
             return true;
         }
 
-        /// <summary>
-        /// Sets the lock state of the specified slot.
-        /// </summary>
-        /// <param name="index">Slot index.</param>
-        /// <param name="locked">True to lock the slot; false to unlock.</param>
-        public void SetLocked(int index, bool locked)
-        {
-            if (!IsIndexValid(index))
-                return;
-
-            if (LockedSlots[index] == locked)
-                return;
-
-            LockedSlots[index] = locked;
-            Changed?.Invoke();
-        }
-
-        /// <summary>
-        /// Gets whether the specified slot is locked.
-        /// </summary>
-        /// <param name="index">Slot index.</param>
-        /// <returns>True if the slot is locked; otherwise false.</returns>
-        public bool IsLocked(int index)
-        {
-            return IsIndexValid(index) && LockedSlots[index];
-        }
-
-        /// <summary>
-        /// Returns the indices of all locked slots.
-        /// </summary>
-        public int[] GetLockedIndices()
-        {
-            var list = new System.Collections.Generic.List<int>();
-            for (int i = 0; i < Capacity; i++)
-            {
-                if (LockedSlots[i])
-                    list.Add(i);
-            }
-
-            return list.ToArray();
-        }
 
         /// <summary>
         /// Sets the item at the given index and triggers the <see cref="Changed"/> event.
@@ -327,13 +279,17 @@ namespace NanikaGame
 
             if (destination != this)
             {
-                LockedSlots[fromIndex] = false;
+                if (this is ShopItemContainer srcShop)
+                    srcShop.SetLocked(fromIndex, false);
+
                 OnItemMovedAway(item, destination);
                 destination.OnItemReceived(item, this);
 
                 if (destItem != null)
                 {
-                    destination.LockedSlots[toIndex] = false;
+                    if (destination is ShopItemContainer destShop)
+                        destShop.SetLocked(toIndex, false);
+
                     destination.OnItemMovedAway(destItem, this);
                     OnItemReceived(destItem, destination);
                 }
@@ -385,7 +341,9 @@ namespace NanikaGame
 
             if (destination != this)
             {
-                LockedSlots[fromIndex] = false;
+                if (this is ShopItemContainer srcShop)
+                    srcShop.SetLocked(fromIndex, false);
+
                 OnItemMovedAway(item, destination);
                 destination.OnItemReceived(item, this);
             }

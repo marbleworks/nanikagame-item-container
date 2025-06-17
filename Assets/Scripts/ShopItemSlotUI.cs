@@ -51,8 +51,8 @@ namespace NanikaGame
             {
                 bool hasItem = item != null;
                 LockToggle.gameObject.SetActive(hasItem);
-                if (hasItem && Container != null)
-                    LockToggle.isOn = Container.IsLocked(Index);
+                if (hasItem && Container is ShopItemContainer shop)
+                    LockToggle.isOn = shop.IsLocked(Index);
             }
 
             if (priceLabel == null || Container == null)
@@ -105,8 +105,8 @@ namespace NanikaGame
 
         private void OnLockToggleChanged(bool isOn)
         {
-            if (Container != null)
-                Container.SetLocked(Index, isOn);
+            if (Container is ShopItemContainer shop)
+                shop.SetLocked(Index, isOn);
         }
     }
 }
