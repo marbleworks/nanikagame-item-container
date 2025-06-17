@@ -53,7 +53,7 @@ namespace NanikaGame
                 return true;
 
             var currentMoney = GetMoneyFunc?.Invoke() ?? 0;
-            return currentMoney >= item.Price;
+            return currentMoney >= item.EffectivePrice;
         }
 
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace NanikaGame
                 return false;
 
             var currentMoney = GetMoneyFunc?.Invoke() ?? 0;
-            return currentMoney >= item.Price;
+            return currentMoney >= item.EffectivePrice;
         }
 
         /// <inheritdoc />
@@ -71,7 +71,7 @@ namespace NanikaGame
         {
             if (item != null && destination != this)
             {
-                UseMoneyAction?.Invoke(item.Price);
+                UseMoneyAction?.Invoke(item.EffectivePrice);
             }
         }
 
@@ -80,7 +80,7 @@ namespace NanikaGame
         {
             if (item != null && source != this)
             {
-                RefundMoneyAction?.Invoke(item.Price);
+                RefundMoneyAction?.Invoke(item.EffectivePrice);
             }
         }
     }
