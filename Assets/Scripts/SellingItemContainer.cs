@@ -8,10 +8,6 @@ namespace NanikaGame
     /// </summary>
     public class SellingItemContainer : ItemContainer
     {
-        /// <summary>
-        /// Current amount of money earned from sold items.
-        /// </summary>
-        public int Money { get; private set; }
 
         /// <summary>
         /// Containers monitored for drag events.
@@ -43,7 +39,6 @@ namespace NanikaGame
                 return;
 
             int price = GetPriceFunc?.Invoke(item) ?? item.EffectivePrice;
-            Money += price;
             AddMoneyAction?.Invoke(price);
 
             // Remove the item from this container after selling it.

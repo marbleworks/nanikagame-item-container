@@ -31,10 +31,9 @@ This repository contains scripts for an item container system in Unity.
 
 ### SellingItemContainer
 
-- **Money**: Tracks money earned by selling items.
 - **WatchedContainers**: Array of containers monitored for drag events.
 - **GetPriceFunc**: Callback used to determine the selling price of each item.
-- When an item enters the container, the price from `GetPriceFunc` (or `EffectivePrice` if not set) is added to `Money` and the item is removed.
+- When an item enters the container, the price from `GetPriceFunc` (or `EffectivePrice` if not set) is provided to `AddMoneyAction` and the item is removed.
 - **AddMoneyAction**: Optional callback invoked with the earned price.
 - Items cannot be moved out once placed in the container.
 
