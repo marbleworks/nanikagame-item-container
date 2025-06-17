@@ -32,6 +32,14 @@ namespace NanikaGame
         public event Action Changed;
 
         /// <summary>
+        /// Raises the <see cref="Changed"/> event.
+        /// </summary>
+        protected void OnChanged()
+        {
+            Changed?.Invoke();
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the container is full.
         /// </summary>
         public bool IsFull => Count == Capacity;
@@ -156,7 +164,7 @@ namespace NanikaGame
         public void Clear()
         {
             Array.Clear(Items, 0, Capacity);
-            Changed?.Invoke();
+            OnChanged();
         }
 
         /// <summary>
@@ -170,7 +178,7 @@ namespace NanikaGame
                 return false;
 
             Array.Copy(items, Items, Capacity);
-            Changed?.Invoke();
+            OnChanged();
             return true;
         }
 
@@ -187,7 +195,7 @@ namespace NanikaGame
                 return false;
 
             Items[index] = item;
-            Changed?.Invoke();
+            OnChanged();
             return true;
         }
 
@@ -224,7 +232,7 @@ namespace NanikaGame
                 return false;
 
             Items[index] = null;
-            Changed?.Invoke();
+            OnChanged();
             return true;
         }
         /// <summary>
@@ -295,9 +303,9 @@ namespace NanikaGame
                 }
             }
 
-            Changed?.Invoke();
+            OnChanged();
             if (destination != this)
-                destination.Changed?.Invoke();
+                destination.OnChanged();
 
             return true;
         }
@@ -348,9 +356,9 @@ namespace NanikaGame
                 destination.OnItemReceived(item, this);
             }
 
-            Changed?.Invoke();
+            OnChanged();
             if (destination != this)
-                destination.Changed?.Invoke();
+                destination.OnChanged();
 
             return true;
         }

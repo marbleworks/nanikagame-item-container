@@ -106,7 +106,7 @@ namespace NanikaGame
                 return;
 
             LockedSlots[index] = locked;
-            Changed?.Invoke();
+            OnChanged();
         }
 
         /// <summary>
