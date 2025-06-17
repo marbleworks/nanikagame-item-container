@@ -101,8 +101,9 @@ namespace NanikaGame
         /// another container.
         /// </summary>
         /// <param name="item">Item that was moved out.</param>
+        /// <param name="index">Slot index the item occupied.</param>
         /// <param name="destination">Container that received the item.</param>
-        protected virtual void OnItemMovedAway(Item item, ItemContainer destination)
+        protected virtual void OnItemMovedAway(Item item, int index, ItemContainer destination)
         {
         }
 
@@ -110,8 +111,9 @@ namespace NanikaGame
         /// Called after an item has been received from another container.
         /// </summary>
         /// <param name="item">Item that was added.</param>
+        /// <param name="index">Slot index where the item was placed.</param>
         /// <param name="source">Container from which the item originated.</param>
-        protected virtual void OnItemReceived(Item item, ItemContainer source)
+        protected virtual void OnItemReceived(Item item, int index, ItemContainer source)
         {
         }
 
@@ -287,19 +289,13 @@ namespace NanikaGame
 
             if (destination != this)
             {
-                if (this is ShopItemContainer srcShop)
-                    srcShop.SetLocked(fromIndex, false);
-
-                OnItemMovedAway(item, destination);
-                destination.OnItemReceived(item, this);
+                OnItemMovedAway(item, fromIndex, destination);
+                destination.OnItemReceived(item, toIndex, this);
 
                 if (destItem != null)
                 {
-                    if (destination is ShopItemContainer destShop)
-                        destShop.SetLocked(toIndex, false);
-
-                    destination.OnItemMovedAway(destItem, this);
-                    OnItemReceived(destItem, destination);
+                    destination.OnItemMovedAway(destItem, toIndex, this);
+                    OnItemReceived(destItem, fromIndex, destination);
                 }
             }
 
@@ -349,11 +345,8 @@ namespace NanikaGame
 
             if (destination != this)
             {
-                if (this is ShopItemContainer srcShop)
-                    srcShop.SetLocked(fromIndex, false);
-
-                OnItemMovedAway(item, destination);
-                destination.OnItemReceived(item, this);
+                OnItemMovedAway(item, fromIndex, destination);
+                destination.OnItemReceived(item, emptyIndex, this);
             }
 
             OnChanged();

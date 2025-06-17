@@ -75,16 +75,17 @@ namespace NanikaGame
         }
 
         /// <inheritdoc />
-        protected override void OnItemMovedAway(Item item, ItemContainer destination)
+        protected override void OnItemMovedAway(Item item, int index, ItemContainer destination)
         {
             if (item != null && destination != this)
             {
+                SetLocked(index, false);
                 UseMoneyAction?.Invoke(item.EffectivePrice);
             }
         }
 
         /// <inheritdoc />
-        protected override void OnItemReceived(Item item, ItemContainer source)
+        protected override void OnItemReceived(Item item, int index, ItemContainer source)
         {
             if (item != null && source != this)
             {
