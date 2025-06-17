@@ -69,6 +69,13 @@ namespace NanikaGame
         public bool AllowExternalSwap { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the list of containers that are not allowed to move
+        /// items into this container.
+        /// </summary>
+        public ItemContainer[] DisallowedSources { get; set; } =
+            Array.Empty<ItemContainer>();
+
+        /// <summary>
         /// Determines whether this container is willing to accept the given
         /// <paramref name="item"/> from the specified <paramref name="source"/>.
         /// Derived containers can override this to impose custom restrictions
@@ -269,6 +276,9 @@ namespace NanikaGame
                 return false;
             if (destination != this && !destination.AllowExternalMove)
                 return false;
+            if (destination != this && destination.DisallowedSources != null &&
+                Array.IndexOf(destination.DisallowedSources, this) >= 0)
+                return false;
 
             var item = Items[fromIndex];
             if (item == null)
@@ -325,6 +335,9 @@ namespace NanikaGame
             if (destination == this && !AllowInternalMove)
                 return false;
             if (destination != this && !destination.AllowExternalMove)
+                return false;
+            if (destination != this && destination.DisallowedSources != null &&
+                Array.IndexOf(destination.DisallowedSources, this) >= 0)
                 return false;
 
             var item = Items[fromIndex];
