@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     /// <summary>
     /// UI component that represents an entire <see cref="ItemContainer"/>.

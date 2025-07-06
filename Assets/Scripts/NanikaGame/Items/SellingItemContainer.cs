@@ -1,6 +1,6 @@
 using System;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     /// <summary>
     /// Item container that automatically converts received items into money.

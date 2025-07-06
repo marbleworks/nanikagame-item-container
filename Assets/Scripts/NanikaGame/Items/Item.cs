@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     public class Item
     {

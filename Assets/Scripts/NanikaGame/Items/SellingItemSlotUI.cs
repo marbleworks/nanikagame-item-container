@@ -1,7 +1,6 @@
 using TMPro;
-using UnityEngine;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     /// <summary>
     /// Slot UI for <see cref="SellingItemContainer"/>.

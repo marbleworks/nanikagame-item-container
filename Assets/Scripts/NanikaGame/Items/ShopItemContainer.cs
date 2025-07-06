@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     /// <summary>
     /// Item container that only accepts items when the user has enough money

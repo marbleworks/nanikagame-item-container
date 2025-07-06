@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     /// <summary>
     /// Represents a container that can hold a fixed number of items.

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     /// <summary>
     /// UI component representing a single slot in an <see cref="ItemContainer"/>.

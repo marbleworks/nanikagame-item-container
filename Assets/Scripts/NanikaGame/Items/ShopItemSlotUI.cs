@@ -1,9 +1,8 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace NanikaGame
+namespace NanikaGame.Items
 {
     /// <summary>
     /// Slot UI that displays an item's price in addition to its icon.
